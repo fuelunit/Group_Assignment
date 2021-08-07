@@ -2,6 +2,9 @@ package edu.sjsu.group_assignment;
 
 import com.github.lgooddatepicker.components.CalendarPanel;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
 
@@ -49,8 +52,15 @@ public class GUI {
         view.setBounds(900,150,150,150);
         view.addActionListener(e -> viewOption());
 
+        /* Grace */
+        JButton addApp=new JButton("add Appointment");
+        addApp.setBounds(900,150,150,150);
+
+        addApp.addActionListener(e->addOption());
+
         panel.add(view);
         panel.add(calendar);
+        panel.add(addApp);
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,6 +93,100 @@ public class GUI {
             pickAllOrDay(Action.chronological);
             System.out.println("start day");
         });
+
+
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        frame.add(panel);
+        frame.setSize(500,200);
+        frame.setVisible(true);
+
+    }
+    private static void testOption() {
+        JFrame frame = new JFrame("Options");
+        JPanel panel = new JPanel();
+        frame.getContentPane();
+        // frame.setPreferredSize(new Dimension(300,300));
+        JButton alpha = new JButton("View appointments by alphabetical order.");
+        JButton startDay = new JButton("View appointments by start date.");
+        alpha.setBounds(0,0,150,150);
+        startDay.setBounds(150,0,150,150);
+
+        panel.add(alpha);
+        panel.add(startDay);
+
+        alpha.addActionListener(e -> {
+            frame.dispose();
+            pickAllOrDay(Action.alphabetical);
+            System.out.println("Description");
+        });
+
+        startDay.addActionListener(e -> {
+            frame.dispose();
+            pickAllOrDay(Action.chronological);
+            System.out.println("start day");
+        });
+
+
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        frame.add(panel);
+        frame.setSize(500,200);
+        frame.setVisible(true);
+
+    }
+    private static void addOption() {
+        JFrame frame = new JFrame("Add an appointment");
+        JPanel panel = new JPanel();
+        frame.getContentPane();
+        frame.setPreferredSize(new Dimension(300,300));
+        JLabel startDate = new JLabel("plz enter your start date:");
+        JLabel endDate = new JLabel("plz enter your end date");
+        JLabel description = new JLabel("plz enter your description :");
+        JLabel type = new JLabel("plz enter your appointment type(monthly/daily/onetime):");
+
+        JTextField startDateTXT = new JTextField(20);
+        JTextField endDateTXT = new JPasswordField(20);
+        JTextField descriptionTXT = new JTextField(20);
+        JTextField typeTXT = new JTextField(20);
+
+        panel.add(startDate);
+        panel.add(startDateTXT);
+        panel.add(endDate);
+        panel.add(endDateTXT);
+        panel.add(description);
+        panel.add(descriptionTXT);
+        panel.add(type);
+        panel.add(typeTXT);
+
+
+        JButton button = new JButton("add");
+        // add a listener to button
+        button.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                LocalDate start=LocalDate.parse(startDateTXT.getText().toString().trim());
+                LocalDate end=LocalDate.parse(endDateTXT.getText().toString().trim());
+                String des= description.getText().toString();
+                if(typeTXT.getText().equals("monthly")){
+                    manager.addAppointment(
+                            new MonthlyAppointment(des, start, end));
+                }
+                else if(typeTXT.getText().equals("daily")){
+                    manager.addAppointment(
+                            new DailyAppointment(des, start, end));
+                }
+                else if(typeTXT.getText().equals("onetime")){
+                    manager.addAppointment(
+                            new OnetimeAppointment(des, start));
+                }
+                else {
+                    typeTXT.setText("wrong input");
+                }
+            }
+        });
+        panel.add(button);
 
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
