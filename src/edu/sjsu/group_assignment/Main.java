@@ -36,7 +36,7 @@ public class Main {
 
  */
   // Test for compatibility by Yipeng Liu
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
         AppointmentProgram.runProgram();
     }
 

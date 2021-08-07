@@ -2,8 +2,6 @@ package edu.sjsu.group_assignment;
 
 import com.github.lgooddatepicker.components.CalendarPanel;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
 
@@ -146,9 +144,9 @@ public class GUI {
     private static void printOut(LocalDate parse, Action action) {
         JFrame frame = new JFrame("Appointment display");
         JPanel panel = new JPanel();
-        JTextArea listDiplay = new JTextArea();
+        JTextArea listDisplay = new JTextArea();
         frame.getContentPane();
-        panel.add(listDiplay);
+        panel.add(listDisplay);
         AppComparator comparator = null;
         String list;
         if (action.toString().equals("chronological"))
@@ -159,13 +157,12 @@ public class GUI {
         {
             //Print all appointment
            list = manager.printAppointment(comparator);
-           listDiplay.setText(list);
         }
         else {
             //Print appointment on specific date
             list = manager.printOccursOn(parse,comparator);
-            listDiplay.setText(list);
         }
+        listDisplay.setText(list);
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         frame.add(panel);
