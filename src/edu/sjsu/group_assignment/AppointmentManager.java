@@ -1,10 +1,3 @@
-/*
-    Author  : Yipeng Liu, Lilou Sicard-Noel, Zhuying Wang
-    Project : Group Assignment
-    Class   : AppointmentManager
-    Date    : 07/25/2021
-    Updated : 07/30/2021
- */
 package edu.sjsu.group_assignment;
 
 import java.io.*;
@@ -22,7 +15,6 @@ import java.util.*;
  */
 public class AppointmentManager {
     private Map <String,Appointment> apptMap = new TreeMap<>();
-
 
     /**
      * add an appointment to the treemap. The appointment was already created. If the appointment already is in the
@@ -292,8 +284,6 @@ public class AppointmentManager {
                 }
             }
         }
-
         return result.toString();
-
     }
 }
