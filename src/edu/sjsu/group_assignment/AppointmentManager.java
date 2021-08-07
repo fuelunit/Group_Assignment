@@ -96,7 +96,7 @@ public class AppointmentManager {
      * Right now, compare to return the comparison of the description
      * @param compare The comparator object
      */
-    public void printAppointment(Comparator<Appointment> compare)
+    public String printAppointment(Comparator<Appointment> compare)
     {
         /*
         if(apptMap.isEmpty())
@@ -114,7 +114,8 @@ public class AppointmentManager {
             }
         }*/
         // Modified due to the implementation of toString. -- Yipeng
-        System.out.print(this.toString(compare));
+        //System.out.print(this.toString(compare));
+        return this.toString(compare);
     }
 
     /**
@@ -250,6 +251,24 @@ public class AppointmentManager {
                 System.out.println(app);
             }
         }
+    }
+
+    public String printOccursOn (LocalDate date,Comparator<Appointment> compare)
+    {
+        StringBuilder result = new StringBuilder();
+        if(this.apptMap.isEmpty()) {
+            result = new StringBuilder("No appointment now.\n");
+        }
+        else {
+            for (Appointment app : apptMap.values()) {
+                if (app.occursOn(date) == true) {
+                    result.append(app.toString());
+                    result.append("/n");
+                }
+            }
+        }
+
+        return result.toString();
 
     }
 }
