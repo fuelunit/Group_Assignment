@@ -245,24 +245,49 @@ public class AppointmentManager {
         }
         return result.toString();
     }
-     public void printOccursOn(LocalDate date){
+
+    /**
+     * A method for printing the appointments that occurs on the date
+     * passed in. That is, go over your appointment collection, only
+     * prints the appointment if occursOn returns true.
+     *
+     * @param date
+     *      A LocalDate object
+     *
+     * @see LocalDate
+     */
+    public void printOccursOn(LocalDate date){
         for(Appointment app:apptMap.values()){
-            if(app.occursOn(date)==true){
+            if(app.occursOn(date)){
                 System.out.println(app);
             }
         }
     }
 
-    public String printOccursOn (LocalDate date,Comparator<Appointment> compare)
-    {
+    /**
+     * A public method that returns a String of ordered Appointments
+     * based on the Comparator that is passed in.
+     *
+     * @param date
+     *      A LocalDate object
+     *
+     * @param compare
+     *      An Appointment Comparator
+     *
+     * @return result
+     *      A String
+     *
+     * @see LocalDate
+     * @see Comparator
+     */
+    public String printOccursOn (LocalDate date,Comparator<Appointment> compare) {
         StringBuilder result = new StringBuilder();
         if(this.apptMap.isEmpty()) {
             result = new StringBuilder("No appointment now.\n");
-        }
-        else {
+        } else {
             for (Appointment app : apptMap.values()) {
-                if (app.occursOn(date) == true) {
-                    result.append(app.toString());
+                if (app.occursOn(date)) {
+                    result.append(app);
                     result.append("/n");
                 }
             }
