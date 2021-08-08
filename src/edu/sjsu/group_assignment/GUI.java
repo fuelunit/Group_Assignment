@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Comparator;
 
 
 // Uses LGoodDatePicker from https://github.com/LGoodDatePicker/LGoodDatePicker/releases/tag/v11.2.1-Standard
@@ -391,10 +392,21 @@ public class GUI {
      */
     private static void saveToFile(Component component) {
         JFileChooser fileChooser = new JFileChooser();
+        Comparator<Appointment> comparator = null;
+        String[] options = {"Order by description", "Order by start date"};
+        int option = JOptionPane.showOptionDialog(component, "Please choose the Appointments' order:",
+                "Save Options", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options, null);
+        if (option == JOptionPane.CLOSED_OPTION) {
+            JOptionPane.showMessageDialog(component, "Saving Cancelled");
+            return;
+        } else if (option == JOptionPane.NO_OPTION) {
+            comparator = new AppComparator();
+        }
 
         if (fileChooser.showSaveDialog(component) == JFileChooser.APPROVE_OPTION) {
             try {
-                manager.saveToFile(fileChooser.getSelectedFile(), null, false);
+                manager.saveToFile(fileChooser.getSelectedFile(), comparator, false);
                 JOptionPane.showMessageDialog(fileChooser, "Saved!", "Message",
                         JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
