@@ -12,7 +12,7 @@ import java.time.LocalDate;
  *
  * @see <a href="https://github.com/LGoodDatePicker/LGoodDatePicker/
  * releases/tag/v11.2.1-Standard">LGoodDatePicker</a>
- * @author Lilou Sicard-Noel, Zhuying Wang, Yipeng Liu
+ * @author Lilou Sicard-Noel, Yipeng Liu, Zhuying Wang
  */
 public class GUI {
     enum Action {
@@ -24,6 +24,7 @@ public class GUI {
     public static void main(String[] args) {
 
         //test
+        /*
         LocalDate startDate = LocalDate.parse("2021-06-01");
         LocalDate endDate = LocalDate.parse("2021-08-05");
         LocalDate inBetween = LocalDate.parse("2021-07-01");
@@ -38,24 +39,77 @@ public class GUI {
         manager.addAppointment(daily);
         manager.addAppointment(monthly);
         manager.addAppointment(oneTime);
-
-        JFrame frame = new JFrame("Main page");
+        */
+        // frame
+        JFrame frame = new JFrame("Appointment Assistant");
         JPanel panel = new JPanel();
         frame.getContentPane();
+        // buttons
         JButton view = new JButton("View Appointment");
+        JButton load = new JButton("Load from File");
+        JButton save = new JButton("Save to File");
+        // Calendar
         CalendarPanel calendar = new CalendarPanel();
         calendar.setSize(200,200);
         calendar.setLocation(0,0);
+        // view button
         view.setBounds(900,150,150,150);
         view.addActionListener(e -> viewOption());
-
+        // load button
+        load.setBounds(900,150,150,150);
+        // save button
+        save.setBounds(900,150,150,150);
+        // Basic Attempt
+        /*
         panel.add(view);
+        panel.add(load);
+        panel.add(save);
         panel.add(calendar);
+        */
+        /*
+        // GroupLayout Attempt
+        GroupLayout apptLayout = new GroupLayout(panel);
+        panel.setLayout(apptLayout);
+        apptLayout.setAutoCreateGaps(true);
+        apptLayout.setAutoCreateContainerGaps(true);
+        // horizontal
+        apptLayout.setHorizontalGroup(
+                apptLayout.createSequentialGroup()
+                        // Calendar on the left side
+                        .addComponent(calendar)
+                        // Buttons on the right side
+                        .addGroup(apptLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(view)
+                                        .addComponent(load)
+                                        .addComponent(save)
+                        )
+        );
+        // vertical
+        apptLayout.setVerticalGroup(
+                apptLayout.createSequentialGroup()
+                        .addGroup(apptLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(calendar)
+                                .addComponent(view))
+                        .addComponent(load)
+                        .addComponent(save)
+        );
+        */
+        // BoxLayout Attempt
+        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.Y_AXIS));
+        // Adding buttons
+        buttonPane.add(view);
+        buttonPane.add(load);
+        buttonPane.add(save);
+        // Adding Calendar and buttonPane
+        panel.add(calendar);
+        panel.add(buttonPane);
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
-        frame.setSize(1100,300);
+        frame.setSize(500,300);
         frame.setVisible(true);
     }
 
@@ -63,7 +117,7 @@ public class GUI {
         JFrame frame = new JFrame("Options");
         JPanel panel = new JPanel();
         frame.getContentPane();
-       // frame.setPreferredSize(new Dimension(300,300));
+        // frame.setPreferredSize(new Dimension(300,300));
         JButton alpha = new JButton("View appointments by alphabetical order.");
         JButton startDay = new JButton("View appointments by start date.");
         alpha.setBounds(0,0,150,150);

@@ -42,7 +42,7 @@ public class AppointmentManager {
      *      A raw {@code String}.
      *
      * @return
-     *      A  capitalzied {@code String}.
+     *      A  capitalized {@code String}.
      */
     public static String capitalize(String inputStr) {
         return inputStr.substring(0,1).toUpperCase()

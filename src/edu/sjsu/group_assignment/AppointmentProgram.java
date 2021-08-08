@@ -3,7 +3,7 @@
     Project : Assignment 4
     Class   : AppointmentProgram
     Date    : 07/24/2021
-    Updated : 07/30/2021
+    Updated : 08/07/2021
  */
 package edu.sjsu.group_assignment;
 
