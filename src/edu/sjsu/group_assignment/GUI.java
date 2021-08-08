@@ -102,39 +102,7 @@ public class GUI {
         frame.setVisible(true);
 
     }
-    private static void testOption() {
-        JFrame frame = new JFrame("Options");
-        JPanel panel = new JPanel();
-        frame.getContentPane();
-        // frame.setPreferredSize(new Dimension(300,300));
-        JButton alpha = new JButton("View appointments by alphabetical order.");
-        JButton startDay = new JButton("View appointments by start date.");
-        alpha.setBounds(0,0,150,150);
-        startDay.setBounds(150,0,150,150);
-
-        panel.add(alpha);
-        panel.add(startDay);
-
-        alpha.addActionListener(e -> {
-            frame.dispose();
-            pickAllOrDay(Action.alphabetical);
-            System.out.println("Description");
-        });
-
-        startDay.addActionListener(e -> {
-            frame.dispose();
-            pickAllOrDay(Action.chronological);
-            System.out.println("start day");
-        });
-
-
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        frame.add(panel);
-        frame.setSize(500,200);
-        frame.setVisible(true);
-
-    }
+   
     private static void addOption() {
         JFrame frame = new JFrame("Add an appointment");
         JPanel panel = new JPanel();
