@@ -121,32 +121,8 @@ public class AppointmentManager {
      *      apptMap, or false otherwise.
      */
     public boolean readFromFile(String inputFile) {
-        try(Scanner scanner = new Scanner(new File(inputFile))) {
-            while (scanner.hasNextLine()){
-                String line = scanner.nextLine();
-                String[] apptStrArr = line.split(",");
-                String description = apptStrArr[0].trim();
-                String dateStr = apptStrArr[1].trim();
-                String type = apptStrArr[2].trim();
-                String[] dateStrArr = dateStr.split("\s");
-                LocalDate startDate = LocalDate.parse(dateStrArr[1]);
-                LocalDate endDate = LocalDate.parse(dateStrArr[3]);
-                if (endDate.compareTo(startDate) < 0) {
-                    System.out.println("Skipping conflicting end dates:");
-                    System.out.println(line);
-                } else if (type.equals("One Time")) {
-                    this.addAppointment(new OnetimeAppointment(description, startDate));
-                } else if (type.equals("Daily")) {
-                    this.addAppointment(new DailyAppointment(description,
-                            startDate, endDate));
-                } else if (type.equals("Monthly")) {
-                    this.addAppointment(new MonthlyAppointment(description,
-                            startDate, endDate));
-                } else {
-                    System.out.println("Skipping unsupported appointment type:");
-                    System.out.println(line);
-                }
-            }
+        try {
+            readFromFile(new File(inputFile));
         } catch (FileNotFoundException e) {
             System.out.println("File not found. Details:");
             System.out.println(e.getMessage());
@@ -164,6 +140,46 @@ public class AppointmentManager {
         }
         // Catches skipped lines occurred in the while loop above.
         return !this.isEmpty();
+    }
+
+    /**
+     * A method to load the data from the file.
+     *
+     * @param inputFile
+     *      A File object for the input file.
+     *
+     * @throws FileNotFoundException
+     * @throws ArrayIndexOutOfBoundsException
+     * @throws DateTimeParseException
+     */
+    public void readFromFile(File inputFile) throws FileNotFoundException,
+            ArrayIndexOutOfBoundsException, DateTimeParseException {
+        Scanner scanner = new Scanner(inputFile);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] apptStrArr = line.split(",");
+            String description = apptStrArr[0].trim();
+            String dateStr = apptStrArr[1].trim();
+            String type = apptStrArr[2].trim();
+            String[] dateStrArr = dateStr.split("\s");
+            LocalDate startDate = LocalDate.parse(dateStrArr[1]);
+            LocalDate endDate = LocalDate.parse(dateStrArr[3]);
+            if (endDate.compareTo(startDate) < 0) {
+                System.out.println("Skipping conflicting end dates:");
+                System.out.println(line);
+            } else if (type.equals("One Time")) {
+                this.addAppointment(new OnetimeAppointment(description, startDate));
+            } else if (type.equals("Daily")) {
+                this.addAppointment(new DailyAppointment(description,
+                        startDate, endDate));
+            } else if (type.equals("Monthly")) {
+                this.addAppointment(new MonthlyAppointment(description,
+                        startDate, endDate));
+            } else {
+                System.out.println("Skipping unsupported appointment type:");
+                System.out.println(line);
+            }
+        }
     }
 
     /**

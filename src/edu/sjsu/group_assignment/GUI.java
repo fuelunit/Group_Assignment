@@ -2,7 +2,10 @@ package edu.sjsu.group_assignment;
 
 import com.github.lgooddatepicker.components.CalendarPanel;
 import javax.swing.*;
+import java.awt.*;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 
 // Uses LGoodDatePicker from https://github.com/LGoodDatePicker/LGoodDatePicker/releases/tag/v11.2.1-Standard
@@ -44,20 +47,29 @@ public class GUI {
         JFrame frame = new JFrame("Appointment Assistant");
         JPanel panel = new JPanel();
         frame.getContentPane();
-        // buttons
-        JButton view = new JButton("View Appointment");
-        JButton load = new JButton("Load from File");
-        JButton save = new JButton("Save to File");
         // Calendar
         CalendarPanel calendar = new CalendarPanel();
         calendar.setSize(200,200);
         calendar.setLocation(0,0);
-        // view button
+        /* Grace */
+        // Add button
+        JButton addApp=new JButton("add Appointment");
+        addApp.setBounds(900,150,150,150);
+        addApp.addActionListener(e->addOption());
+        // Delete button
+        JButton deleteApp=new JButton("delete Appointment");
+        deleteApp.setBounds(900,150,150,150);
+        deleteApp.addActionListener(e->deleteOption());
+        // View button - Lilou
+        JButton view = new JButton("View Appointment");
         view.setBounds(900,150,150,150);
         view.addActionListener(e -> viewOption());
-        // load button
+        // Load button - Yipeng
+        JButton load = new JButton("Load from File");
         load.setBounds(900,150,150,150);
-        // save button
+        load.addActionListener(e -> loadFromFile(load));
+        // Save button - Yipeng
+        JButton save = new JButton("Save to File");
         save.setBounds(900,150,150,150);
         // Basic Attempt
         /*
@@ -99,6 +111,8 @@ public class GUI {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.Y_AXIS));
         // Adding buttons
+        buttonPane.add(addApp);
+        buttonPane.add(deleteApp);
         buttonPane.add(view);
         buttonPane.add(load);
         buttonPane.add(save);
@@ -137,6 +151,98 @@ public class GUI {
             pickAllOrDay(Action.chronological);
             System.out.println("start day");
         });
+
+
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        frame.add(panel);
+        frame.setSize(500,200);
+        frame.setVisible(true);
+
+    }
+
+    private static void deleteOption(){
+        JFrame frame = new JFrame("delete");
+        JPanel panel = new JPanel();
+        frame.getContentPane();
+        // frame.setPreferredSize(new Dimension(300,300));
+        JLabel del = new JLabel("plz enter the description of the appointment that you want to delete") ;
+        JTextField delTXT = new JTextField(20);
+
+        panel.add(del);
+        panel.add(delTXT);
+
+
+        JButton button = new JButton("delete");
+        // add a listener to button
+        button.addActionListener(e -> {
+            String del_des= delTXT.getText();
+            if (manager.deleteAppointment(del_des)) {
+                frame.dispose();
+            } else {
+                delTXT.setText("This appointment doesn't exist!");
+            }
+        });
+        panel.add(button);
+
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        frame.add(panel);
+        frame.setSize(500,200);
+        frame.setVisible(true);
+
+    }
+    private static void addOption() {
+        JFrame frame = new JFrame("Add an appointment");
+        JPanel panel = new JPanel();
+        frame.getContentPane();
+        frame.setPreferredSize(new Dimension(300,300));
+        JLabel startDate = new JLabel("plz enter your start date:");
+        JLabel endDate = new JLabel("plz enter your end date");
+        JLabel description = new JLabel("plz enter your description :");
+        JLabel type = new JLabel("plz enter your appointment type(monthly/daily/onetime):");
+
+        JTextField startDateTXT = new JTextField(20);
+        JTextField endDateTXT = new JTextField(20);
+        JTextField descriptionTXT = new JTextField(20);
+        JTextField typeTXT = new JTextField(20);
+
+        panel.add(startDate);
+        panel.add(startDateTXT);
+        panel.add(endDate);
+        panel.add(endDateTXT);
+        panel.add(description);
+        panel.add(descriptionTXT);
+        panel.add(type);
+        panel.add(typeTXT);
+
+
+        JButton button = new JButton("add");
+        // add a listener to button
+        button.addActionListener(e -> {
+            LocalDate start=LocalDate.parse(startDateTXT.getText().trim());
+            LocalDate end=LocalDate.parse(endDateTXT.getText().trim());
+            String des= descriptionTXT.getText();
+            switch (typeTXT.getText()) {
+                case "monthly" -> {
+                    manager.addAppointment(
+                            new MonthlyAppointment(des, start, end));
+                    frame.dispose();
+                }
+                case "daily" -> {
+                    manager.addAppointment(
+                            new DailyAppointment(des, start, end));
+                    frame.dispose();
+                }
+                case "onetime" -> {
+                    manager.addAppointment(
+                            new OnetimeAppointment(des, start));
+                    frame.dispose();
+                }
+                default -> typeTXT.setText("wrong input");
+            }
+        });
+        panel.add(button);
 
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -224,4 +330,46 @@ public class GUI {
         frame.setVisible(true);
     }
 
+    /**
+     * Opens up a file choosing window using JFileChooser.
+     *
+     * @param component
+     *      A Component
+     *
+     * @see Component
+     * @see JFileChooser
+     */
+    private static void loadFromFile(Component component) {
+        JFileChooser fileChooser = new JFileChooser();
+        //JFrame msgFrame = new JFrame();
+        StringBuilder msg = new StringBuilder();
+        JOptionPane msgPane = null;
+        if (fileChooser.showOpenDialog(component) == JFileChooser.OPEN_DIALOG) {
+            // If the user chooses to open
+            try {
+                manager.readFromFile(fileChooser.getSelectedFile());
+                msg.append("Appointments successfully loaded from the input file.\n");
+                msg.append("Corrupted entries are discarded");
+
+            } catch (FileNotFoundException e) {
+                // System.out.println("File not found. Details:");
+                // System.out.println(e.getMessage());
+                msg.append(e.getMessage());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // System.out.println("File is corrupted. Details:");
+                // System.out.println("Format cannot be understood.");
+                // System.out.println(e.getMessage());
+                msg.append("File is corrupted. Details: Format cannot be understood.\n");
+                msg.append(e.getMessage());
+            } catch (DateTimeParseException e) {
+                // System.out.println("File is corrupted. Details:");
+                // System.out.println("Date format cannot be understood.");
+                // System.out.println(e.getMessage());
+                msg.append("File is corrupted. Details: Date format cannot be understood.\n");
+                msg.append(e.getMessage());
+            } finally {
+                msgPane = new JOptionPane(msg, JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
 }
