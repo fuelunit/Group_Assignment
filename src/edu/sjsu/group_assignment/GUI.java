@@ -233,7 +233,7 @@ public class GUI {
                     throw new DateTimeException("End date proceeds start date");
                 }
                 String des = descriptionTXT.getText();
-                switch (typeTXT.getText()) {
+                switch (typeTXT.getText().toLowerCase()) {
                     case "monthly" -> {
                         manager.addAppointment(
                                 new MonthlyAppointment(des, start, end));
