@@ -55,12 +55,15 @@ public class GUI {
         /* Grace */
         JButton addApp=new JButton("add Appointment");
         addApp.setBounds(900,150,150,150);
+        JButton deleteApp=new JButton("delete Appointment");
+        deleteApp.setBounds(900,150,150,150);
 
         addApp.addActionListener(e->addOption());
-
+        deleteApp.addActionListener(e->deleteOption());
         panel.add(view);
         panel.add(calendar);
         panel.add(addApp);
+        panel.add(deleteApp);
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,7 +105,38 @@ public class GUI {
         frame.setVisible(true);
 
     }
-   
+
+    private static void deleteOption(){
+        JFrame frame = new JFrame("delete");
+        JPanel panel = new JPanel();
+        frame.getContentPane();
+        // frame.setPreferredSize(new Dimension(300,300));
+        JLabel del = new JLabel("plz enter the description of the appointment that you want to delete") ;
+        JTextField delTXT = new JTextField(20);
+
+        panel.add(del);
+        panel.add(delTXT);
+
+
+        JButton button = new JButton("delete");
+        // add a listener to button
+        button.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                String del_des= delTXT.getText().toString();
+                manager.deleteAppointment(del_des);
+            }
+        });
+        panel.add(button);
+
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        frame.add(panel);
+        frame.setSize(500,200);
+        frame.setVisible(true);
+
+    }
     private static void addOption() {
         JFrame frame = new JFrame("Add an appointment");
         JPanel panel = new JPanel();
@@ -114,7 +148,7 @@ public class GUI {
         JLabel type = new JLabel("plz enter your appointment type(monthly/daily/onetime):");
 
         JTextField startDateTXT = new JTextField(20);
-        JTextField endDateTXT = new JPasswordField(20);
+        JTextField endDateTXT = new JTextField(20);
         JTextField descriptionTXT = new JTextField(20);
         JTextField typeTXT = new JTextField(20);
 
