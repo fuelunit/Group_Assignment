@@ -1,6 +1,8 @@
 package edu.sjsu.group_assignment;
 
 import com.github.lgooddatepicker.components.CalendarPanel;
+import com.github.lgooddatepicker.components.DatePicker;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -48,11 +50,7 @@ public class GUI {
         JFrame frame = new JFrame("Appointment Assistant");
         JPanel panel = new JPanel();
         frame.getContentPane();
-        // Calendar
-        CalendarPanel calendar = new CalendarPanel();
-        calendar.setSize(200,200);
-        calendar.setLocation(0,0);
-        /* Grace */
+        /* zhuying */
         // Add button
         JButton addApp=new JButton("add Appointment");
         addApp.setBounds(900,150,150,150);
@@ -61,6 +59,9 @@ public class GUI {
         JButton deleteApp=new JButton("delete Appointment");
         deleteApp.setBounds(900,150,150,150);
         deleteApp.addActionListener(e->deleteOption());
+        //level 3
+        DatePicker datePicker1 = new DatePicker();
+        datePicker1.addDateChangeListener(e->printOut(datePicker1.getDate(),Action.alphabetical));
         // View button - Lilou
         JButton view = new JButton("View Appointment");
         view.setBounds(900,150,150,150);
@@ -119,8 +120,9 @@ public class GUI {
         buttonPane.add(load);
         buttonPane.add(save);
         // Adding Calendar and buttonPane
-        panel.add(calendar);
+        panel.add(datePicker1);
         panel.add(buttonPane);
+
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
