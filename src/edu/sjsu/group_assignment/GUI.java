@@ -125,7 +125,11 @@ public class GUI {
             public void actionPerformed(ActionEvent e)
             {
                 String del_des= delTXT.getText().toString();
-                manager.deleteAppointment(del_des);
+                if (manager.deleteAppointment(del_des)) {
+                    frame.dispose();
+                } else {
+                    delTXT.setText("This appointment doesn't exist!");
+                }
             }
         });
         panel.add(button);
@@ -170,18 +174,21 @@ public class GUI {
             {
                 LocalDate start=LocalDate.parse(startDateTXT.getText().toString().trim());
                 LocalDate end=LocalDate.parse(endDateTXT.getText().toString().trim());
-                String des= description.getText().toString();
+                String des= descriptionTXT.getText().toString();
                 if(typeTXT.getText().equals("monthly")){
                     manager.addAppointment(
                             new MonthlyAppointment(des, start, end));
+                    frame.dispose();
                 }
                 else if(typeTXT.getText().equals("daily")){
                     manager.addAppointment(
                             new DailyAppointment(des, start, end));
+                    frame.dispose();
                 }
                 else if(typeTXT.getText().equals("onetime")){
                     manager.addAppointment(
                             new OnetimeAppointment(des, start));
+                    frame.dispose();
                 }
                 else {
                     typeTXT.setText("wrong input");
