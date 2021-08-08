@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Comparator;
@@ -225,26 +226,37 @@ public class GUI {
         JButton button = new JButton("add");
         // add a listener to button
         button.addActionListener(e -> {
-            LocalDate start=LocalDate.parse(startDateTXT.getText().trim());
-            LocalDate end=LocalDate.parse(endDateTXT.getText().trim());
-            String des= descriptionTXT.getText();
-            switch (typeTXT.getText()) {
-                case "monthly" -> {
-                    manager.addAppointment(
-                            new MonthlyAppointment(des, start, end));
-                    frame.dispose();
+            try {
+                LocalDate start = LocalDate.parse(startDateTXT.getText().trim());
+                LocalDate end = LocalDate.parse(endDateTXT.getText().trim());
+                if (end.compareTo(start) < 0) {
+                    throw new DateTimeException("End date proceeds start date");
                 }
-                case "daily" -> {
-                    manager.addAppointment(
-                            new DailyAppointment(des, start, end));
-                    frame.dispose();
+                String des = descriptionTXT.getText();
+                switch (typeTXT.getText()) {
+                    case "monthly" -> {
+                        manager.addAppointment(
+                                new MonthlyAppointment(des, start, end));
+                        frame.dispose();
+                    }
+                    case "daily" -> {
+                        manager.addAppointment(
+                                new DailyAppointment(des, start, end));
+                        frame.dispose();
+                    }
+                    case "onetime" -> {
+                        manager.addAppointment(
+                                new OnetimeAppointment(des, start));
+                        frame.dispose();
+                    }
+                    default -> typeTXT.setText("wrong input");
                 }
-                case "onetime" -> {
-                    manager.addAppointment(
-                            new OnetimeAppointment(des, start));
-                    frame.dispose();
-                }
-                default -> typeTXT.setText("wrong input");
+            } catch (DateTimeParseException e1) {
+                JOptionPane.showMessageDialog(button, "Unsupported Date Format",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (DateTimeException e2) {
+                JOptionPane.showMessageDialog(button, e2.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
         panel.add(button);

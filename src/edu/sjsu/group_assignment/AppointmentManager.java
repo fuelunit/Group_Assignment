@@ -149,8 +149,16 @@ public class AppointmentManager {
      *      A File object for the input file.
      *
      * @throws FileNotFoundException
+     *      File not found
+     *
      * @throws ArrayIndexOutOfBoundsException
+     *      Out of bound, a way to check the input format
+     *
      * @throws DateTimeParseException
+     *      True if the input date is not following the required
+     *      format: yyyy-mm-dd
+     *
+     * @see DateTimeParseException
      */
     public void readFromFile(File inputFile) throws FileNotFoundException,
             ArrayIndexOutOfBoundsException, DateTimeParseException {
@@ -314,7 +322,7 @@ public class AppointmentManager {
             for (Appointment app : apptMap.values()) {
                 if (app.occursOn(date)) {
                     result.append(app);
-                    result.append("/n");
+                    result.append("\n");
                 }
             }
         }
