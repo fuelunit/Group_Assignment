@@ -4,6 +4,7 @@ import com.github.lgooddatepicker.components.CalendarPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -71,6 +72,7 @@ public class GUI {
         // Save button - Yipeng
         JButton save = new JButton("Save to File");
         save.setBounds(900,150,150,150);
+        save.addActionListener(e -> saveToFile(save));
         // Basic Attempt
         /*
         panel.add(view);
@@ -341,34 +343,61 @@ public class GUI {
      */
     private static void loadFromFile(Component component) {
         JFileChooser fileChooser = new JFileChooser();
-        //JFrame msgFrame = new JFrame();
         StringBuilder msg = new StringBuilder();
-        JOptionPane msgPane = null;
-        if (fileChooser.showOpenDialog(component) == JFileChooser.OPEN_DIALOG) {
+        int optionType = JOptionPane.PLAIN_MESSAGE;
+        if (fileChooser.showOpenDialog(component) == JFileChooser.APPROVE_OPTION) {
             // If the user chooses to open
             try {
                 manager.readFromFile(fileChooser.getSelectedFile());
                 msg.append("Appointments successfully loaded from the input file.\n");
                 msg.append("Corrupted entries are discarded");
-
+                optionType = JOptionPane.INFORMATION_MESSAGE;
             } catch (FileNotFoundException e) {
                 // System.out.println("File not found. Details:");
                 // System.out.println(e.getMessage());
                 msg.append(e.getMessage());
+                optionType = JOptionPane.ERROR_MESSAGE;
             } catch (ArrayIndexOutOfBoundsException e) {
                 // System.out.println("File is corrupted. Details:");
                 // System.out.println("Format cannot be understood.");
                 // System.out.println(e.getMessage());
                 msg.append("File is corrupted. Details: Format cannot be understood.\n");
                 msg.append(e.getMessage());
+                optionType = JOptionPane.ERROR_MESSAGE;
             } catch (DateTimeParseException e) {
                 // System.out.println("File is corrupted. Details:");
                 // System.out.println("Date format cannot be understood.");
                 // System.out.println(e.getMessage());
                 msg.append("File is corrupted. Details: Date format cannot be understood.\n");
                 msg.append(e.getMessage());
+                optionType = JOptionPane.ERROR_MESSAGE;
             } finally {
-                msgPane = new JOptionPane(msg, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(fileChooser, msg, "File Loading Result", optionType);
+            }
+        }
+    }
+
+    /**
+     * Opens up a file choosing window using JFileChooser that
+     * allows the user to save the Appointments to a file.
+     *
+     * @param component
+     *      A Component
+     *
+     * @see Component
+     * @see JFileChooser
+     */
+    private static void saveToFile(Component component) {
+        JFileChooser fileChooser = new JFileChooser();
+
+        if (fileChooser.showSaveDialog(component) == JFileChooser.APPROVE_OPTION) {
+            try {
+                manager.saveToFile(fileChooser.getSelectedFile(), null, false);
+                JOptionPane.showMessageDialog(fileChooser, "Saved!", "Message",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(fileChooser, e.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }

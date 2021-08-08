@@ -202,8 +202,9 @@ public class AppointmentManager {
      */
     public boolean saveToFile(String outputFile, Comparator<Appointment> comparator,
                            boolean isAppending) {
-        try(FileWriter writer = new FileWriter(outputFile, isAppending)) {
-            writer.write(this.toString(comparator));
+        try {
+            File outFile = new File(outputFile);
+            saveToFile(outFile, comparator, isAppending);
             return true;
         } catch (IOException e) {
             System.out.println("File not found. Details:");
@@ -228,6 +229,23 @@ public class AppointmentManager {
      */
     public boolean saveToFile(String outputFile) {
         return this.saveToFile(outputFile, null, false);
+    }
+
+    /**
+     * A method to save the appointments to a file.
+     * Each line includes the information of one appointment.
+     * Default comparator to null and isAppending to false.
+     * In other words, using the natural order and overwriting
+     * the save file.
+     *
+     * @param outputFile
+     *      A File object.
+     */
+    public void saveToFile(File outputFile, Comparator<Appointment> comparator,
+                           boolean isAppending) throws IOException {
+        FileWriter writer = new FileWriter(outputFile, isAppending);
+        writer.write(this.toString(comparator));
+        writer.close();
     }
 
     /**
